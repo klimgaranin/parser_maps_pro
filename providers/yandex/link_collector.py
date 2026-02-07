@@ -145,7 +145,21 @@ def open_city_base(driver, city: str, domain: str, debug_dir: str, save_debug: b
 
     if not z:
         z = (os.getenv("Y_CITY_Z_DEFAULT", "11") or "11").strip()
-
+    
+    # Извлекаем city_id из текущего URL
+    city_id = None
+    try:
+        parts = urlparse(cur).path.split("/")
+        if "maps" in parts:
+            idx = parts.index("maps")
+            if idx + 1 < len(parts) and parts[idx + 1].isdigit():
+                city_id = parts[idx + 1]
+    except Exception:
+        pass
+    
+    # Возвращаем URL с city_id если он найден
+    if city_id:
+        return f"https://yandex.{domain}/maps/{city_id}/?" + urlencode({"ll": ll, "z": z}, doseq=False)
     return f"https://yandex.{domain}/maps/?" + urlencode({"ll": ll, "z": z}, doseq=False)
 
 
@@ -375,4 +389,5 @@ def collect_task_links(driver, task: dict, excludes: list, debug_dir: str, save_
         _save_debug(driver, debug_dir, f"AFTER_{tag}_COUNT_{len(filtered)}")
 
     return filtered
+
 
