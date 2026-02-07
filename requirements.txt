@@ -1,0 +1,12 @@
+beautifulsoup4
+lxml
+pandas
+openpyxl
+fastapi
+uvicorn
+python-multipart
+python-dotenv
+psycopg2-binary
+selenium>=4.19.0
+requests<3
+rich>=13.7.0
