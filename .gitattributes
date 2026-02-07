@@ -1,0 +1,46 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Python
+*.py text eol=lf
+*.pyi text eol=lf
+
+# Config files
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+*.cfg text eol=lf
+.env* text eol=lf
+
+# Documentation
+*.md text eol=lf
+*.txt text eol=lf
+
+# Excel files
+*.xlsx binary
+*.xls binary
+
+# SQLite
+*.sqlite binary
+*.db binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+
+# Executables
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
