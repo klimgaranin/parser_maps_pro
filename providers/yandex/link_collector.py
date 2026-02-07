@@ -103,7 +103,7 @@ def open_city_base(driver, city: str, domain: str, debug_dir: str, save_debug: b
     if not city:
         raise PageStructureError("Пустое имя города (task.city).")
 
-    driver.get(f"https://yandex.{domain}/maps")
+    driver.get(f"https://yandex.{domain}/maps/{city}")
     _wait_ready(driver, timeout=wait_input)
 
     if is_captcha(driver):
