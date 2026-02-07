@@ -161,21 +161,34 @@ def _get_ll_z_from_city_base(city_base: str) -> tuple[str, str, str]:
     if not z:
         z = (os.getenv("Y_CITY_Z_DEFAULT", "11") or "11").strip()
     domain = parsed.netloc.split("yandex.")[-1]
-    return domain, ll, z
+    city_id = None
+    try:
+        parts = parsed.path.split("/")
+        if "maps" in parts:
+            idx = parts.index("maps")
+            if idx + 1 < len(parts) and parts[idx + 1].isdigit():
+                city_id = parts[idx + 1]
+    except Exception:
+        pass
+    return domain, ll, z, city_id
 
 
 def build_search_url(city_base: str, query_ru: str) -> str:
-    domain, ll, z = _get_ll_z_from_city_base(city_base)
+    domain, ll, z, city_id = _get_ll_z_from_city_base(city_base)
     text = (query_ru or "").strip()
     q = quote(text, safe="")
+    if city_id:
+        return f"https://yandex.{domain}/maps/{city_id}/?" + urlencode({"text": q, "ll": ll, "z": z}, doseq=False)
     return f"https://yandex.{domain}/maps/?" + urlencode({"text": q, "ll": ll, "z": z}, doseq=False)
 
 
 def build_category_url(city_base: str, category_path: str) -> str:
-    domain, ll, z = _get_ll_z_from_city_base(city_base)
+    domain, ll, z, city_id = _get_ll_z_from_city_base(city_base)
     cat = (category_path or "").strip().strip("/")
     if not cat:
         raise PageStructureError("Пустой category_path.")
+    if city_id:
+        return f"https://yandex.{domain}/maps/{city_id}/category/{cat}/?" + urlencode({"ll": ll, "z": z}, doseq=False)
     return f"https://yandex.{domain}/maps/category/{cat}/?" + urlencode({"ll": ll, "z": z}, doseq=False)
 
 
@@ -362,3 +375,4 @@ def collect_task_links(driver, task: dict, excludes: list, debug_dir: str, save_
         _save_debug(driver, debug_dir, f"AFTER_{tag}_COUNT_{len(filtered)}")
 
     return filtered
+
